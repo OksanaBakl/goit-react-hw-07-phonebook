@@ -1,21 +1,16 @@
-import React from "react";
-import ContactForm from "./components/ContactForm/ContactForm";
-import Filter from "./components/Filter/Filter";
-import ContactList from "./components/ContactList/ContactList";
+import "./App.css";
+import ContactForm from "./components/contactForm/ContactForm";
+import ContactList from "./components/contactList/ContactList";
+import Filter from "./components/filter/Filter";
 
-import "./styles.css";
-
-const App = () => {
+export default function App() {
   return (
-    <div className="container">
-      <h1 className="title">Phonebook</h1>
+    <>
+      <h1>Phonebook</h1>
       <ContactForm />
-
-      <h2 className="title">Contacts</h2>
+      <h2>Filter</h2>
       <Filter />
       <ContactList />
-    </div>
+    </>
   );
-};
-
-export default App;
+}

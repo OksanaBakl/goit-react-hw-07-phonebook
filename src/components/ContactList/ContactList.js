@@ -1,21 +1,21 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import contactsActions from "../../redux/contacts/contacts-actions";
+import { useSelector, useDispatch } from "react-redux";
+import selectors from "../../redux/contacts/contactsSelectors";
+import operations from "../../redux/contacts/contactsOperations";
 
-import styles from "./ContactList.module.css";
+const ContactList = () => {
+  const visibleContacts = useSelector(selectors.getVisibleContacts);
 
-const ContactList = ({ contactList, onDeleteContact }) => {
+  const dispatch = useDispatch();
+  if (visibleContacts.length === 0) return null;
   return (
-    <ul className={styles.list}>
-      {contactList.map(({ id, name, number }) => (
-        <li key={id} className={styles.item}>
-          <p>{name}: </p>
-          <p>{number}</p>
+    <ul>
+      {visibleContacts.map((contact) => (
+        <li key={contact.id}>
+          {contact.name}: {contact.number}
           <button
-            type="button"
-            className={styles.button}
-            onClick={() => onDeleteContact(id)}
+            onClick={(id) =>
+              dispatch(operations.fetchDeleteContacts(contact.id))
+            }
           >
             Delete
           </button>
@@ -25,24 +25,4 @@ const ContactList = ({ contactList, onDeleteContact }) => {
   );
 };
 
-ContactList.propTypes = {
-  contacts: PropTypes.array,
-  onDeleteContact: PropTypes.func.isRequired,
-};
-
-const filterContacts = (contacts, filter) => {
-  const normalizedFilter = filter.toLowerCase();
-  return contacts.filter((contact) =>
-    contact.name.toLowerCase().includes(normalizedFilter)
-  );
-};
-
-const mapStateToProps = ({ contacts: { items, filter } }) => ({
-  contactList: filterContacts(items, filter),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  onDeleteContact: (id) => dispatch(contactsActions.deleteContact(id)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(ContactList);
+export default ContactList;
