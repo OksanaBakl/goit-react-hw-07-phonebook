@@ -5,14 +5,16 @@ import { useSelector, useDispatch } from "react-redux";
 import selectors from "../../redux/contacts/contactsSelectors";
 import contactsOperations from "../../redux/contacts/contactsOperations";
 
-export default function ContactForm(handleAddContact) {
+export default function ContactForm() {
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
 
   const contacts = useSelector(selectors.getContactsItems);
 
   const dispatch = useDispatch();
+
   useEffect(() => dispatch(contactsOperations.fetchContacts()), [dispatch]);
+
   const handleChangeForm = ({ target }) => {
     const { name, value } = target;
     switch (name) {
@@ -27,28 +29,32 @@ export default function ContactForm(handleAddContact) {
     }
   };
 
-  const checkContacts = () => {
-    contacts.forEach((contact) => {
-      if (contact.name === name || contact.number === number) {
-        alert(`${name} already exists. Try another name`);
-      }
-      return;
-    });
-  };
+  // const checkContacts = () => {
+  // 	if (contacts.find((contact) => name === contact.name)) {
+  // 		setName("");
+  // 		setNumber("");
+  // 		return alert(`${name} already exists. Try another name`);
+  // 	}
+  // };
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
+    if (contacts.find((contact) => name === contact.name)) {
+      setName("");
+      setNumber("");
+      return alert(`${name} already exists. Try another name`);
+    }
     dispatch(
       contactsOperations.fetchAddContacts({ id: uuidv4(), name, number })
     );
-    checkContacts();
-    resetForm();
+    // checkContacts();
+    // resetForm();
   };
 
-  const resetForm = () => {
-    setName("");
-    setNumber("");
-  };
+  // const resetForm = () => {
+  // 	setName("");
+  // 	setNumber("");
+  // };
 
   return (
     <form onSubmit={handleFormSubmit}>
